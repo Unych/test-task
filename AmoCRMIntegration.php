@@ -10,52 +10,40 @@ class AmoCRMIntegration
 
     public function __construct($clientId, $clientSecret, $redirectUri, $baseDomain)
     {
+        // Создаем экземпляр AmoCRM Provider с переданными параметрами
         $this->provider = new AmoCRM([
             'clientId' => $clientId,
             'clientSecret' => $clientSecret,
             'redirectUri' => $redirectUri,
         ]);
+
+        // Устанавливаем базовый домен
         $this->provider->setBaseDomain($baseDomain);
+
+        // Определяем имя файла для хранения токена
         $this->tokenFile = 'token.json';
     }
 
     public function getAccessToken($code)
     {
         try {
+            // Запрашиваем токен с использованием кода авторизации
             $accessToken = $this->provider->getAccessToken('authorization_code', [
                 'code' => $code,
             ]);
+
+            // Сохраняем полученный токен
             $this->saveToken([
                 'accessToken' => $accessToken->getToken(),
                 'refreshToken' => $accessToken->getRefreshToken(),
                 'expires' => $accessToken->getExpires(),
                 'baseDomain' => $this->provider->getBaseDomain(),
             ]);
+
+            // Возвращаем полученный токен
             return $accessToken;
         } catch (Exception $e) {
-            die((string)$e);
-        }
-    }
-
-    public function loadAccessToken()
-    {
-        $accessToken = json_decode(file_get_contents($this->tokenFile), true);
-        if (
-            isset($accessToken)
-            && isset($accessToken['accessToken'])
-            && isset($accessToken['refreshToken'])
-            && isset($accessToken['expires'])
-            && isset($accessToken['baseDomain'])
-        ) {
-            return new \League\OAuth2\Client\Token\AccessToken([
-                'access_token' => $accessToken['accessToken'],
-                'refresh_token' => $accessToken['refreshToken'],
-                'expires' => $accessToken['expires'],
-                'baseDomain' => $accessToken['baseDomain'],
-            ]);
-        } else {
-            echo 'Неверный файл токена';
-            return null;
+            die((string)$e); // Обработка ошибки
         }
     }
 
@@ -68,6 +56,7 @@ class AmoCRMIntegration
             && isset($accessTokenData['expires'])
             && isset($accessTokenData['baseDomain'])
         ) {
+            // Сохраняем данные токена в файл
             $data = [
                 'access_token' => $accessTokenData['accessToken'],
                 'refresh_token' => $accessTokenData['refreshToken'],
@@ -93,4 +82,3 @@ $integration = new AmoCRMIntegration($clientId, $clientSecret, $redirectUri, $ba
 
 $accessToken = $integration->getAccessToken($code);
 echo 'Токен получен';
-
