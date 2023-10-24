@@ -7,7 +7,7 @@
 </head>
 <body>
 <h1>Заполните форму для заявки</h1>
-<form action="process_form.php" method="post">
+<form action="AmoCRMActions.php" method="post">
     <label for="name">Имя:</label>
     <input type="text" id="name" name="name" required>
     <br>
