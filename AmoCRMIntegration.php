@@ -1,11 +1,15 @@
 <?php
 include_once __DIR__ . '/vendor/autoload.php';
+
 use AmoCRM\OAuth2\Client\Provider\AmoCRM;
-class AmoCRMIntegration {
+
+class AmoCRMIntegration
+{
     private $provider;
     private $tokenFile;
 
-    public function __construct($clientId, $clientSecret, $redirectUri, $baseDomain) {
+    public function __construct($clientId, $clientSecret, $redirectUri, $baseDomain)
+    {
         $this->provider = new AmoCRM([
             'clientId' => $clientId,
             'clientSecret' => $clientSecret,
@@ -15,7 +19,8 @@ class AmoCRMIntegration {
         $this->tokenFile = 'token.json';
     }
 
-    public function getAccessToken($code) {
+    public function getAccessToken($code)
+    {
         try {
             $accessToken = $this->provider->getAccessToken('authorization_code', [
                 'code' => $code,
@@ -32,7 +37,8 @@ class AmoCRMIntegration {
         }
     }
 
-    public function loadAccessToken() {
+    public function loadAccessToken()
+    {
         $accessToken = json_decode(file_get_contents($this->tokenFile), true);
         if (
             isset($accessToken)
@@ -53,7 +59,8 @@ class AmoCRMIntegration {
         }
     }
 
-    private function saveToken($accessTokenData) {
+    private function saveToken($accessTokenData)
+    {
         if (
             isset($accessTokenData)
             && isset($accessTokenData['accessToken'])

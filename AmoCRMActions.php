@@ -1,18 +1,21 @@
 <?php
 
 // Создаем класс для интеграции с AmoCRM
-class AmoCRMActions {
+class AmoCRMActions
+{
     private $subdomain;
     private $accessToken;
 
     // Конструктор класса
-    public function __construct($subdomain, $accessToken) {
+    public function __construct($subdomain, $accessToken)
+    {
         $this->subdomain = $subdomain;
         $this->accessToken = $accessToken;
     }
 
     // Метод для создания контакта
-    public function createContact($name, $email, $phone) {
+    public function createContact($name, $email, $phone)
+    {
         $contactData = [
             'name' => $name,
             'custom_fields_values' => [
@@ -59,7 +62,8 @@ class AmoCRMActions {
     }
 
     // Метод для создания сделки и привязки контакта к ней
-    public function createLead($contactId, $price) {
+    public function createLead($contactId, $price)
+    {
         $leadData = [
             'name' => 'Новая сделка',
             '_embedded' => [
@@ -103,7 +107,8 @@ class AmoCRMActions {
     }
 
     // Вспомогательный метод для инициализации cURL
-    private function initCurl($url, $method, $data, $headers) {
+    private function initCurl($url, $method, $data, $headers)
+    {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
